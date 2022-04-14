@@ -142,6 +142,8 @@ public class Main {
             Node s = g.getRandomNode();
             Node e = g.getRandomNode();
 
+            while (e.equals(s)) e = g.getRandomNode();
+
             /*
              * Für Algo. testen und Ergebnisse norieren.
              */
