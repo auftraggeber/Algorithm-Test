@@ -1,5 +1,10 @@
 package de.fhzwickau.roomfinder.demo.alg.graph;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Graph {
 
     private final int nodes;
@@ -8,6 +13,8 @@ public class Graph {
     private final int branchToExistingNodeOdds;
 
     private Node continueWithNode;
+
+    private Map<Integer, Node> nodeMap = new HashMap<>();
 
     public static int randomInt(final int min, final int max) {
         int i = (int) (Math.random() * (max - min));
@@ -36,57 +43,60 @@ public class Graph {
 
     public void build() {
 
-        createNode(null);
-
-        while (continueWithNode != null) {
-            Node node = continueWithNode;
-            continueWithNode = null;
-
-            createNode(node);
-        }
+        createNodes();
 
     }
 
     /**
      * Erstellt und verknüpft Konten rekursiv.
-     * @param fromNode Der vorhergehende Knoten.
      */
-    private void createNode(Node fromNode) {
-        Node node = new Node();
+    private void createNodes() {
+        Node fromNode = null;
 
-        if (fromNode != null) {
-            fromNode.connectTo(node, randomInt(10,300));
+        while (true) {
+            Node node = new Node();
+
+            nodeMap.put(node.getId(), node);
+
+            if (fromNode != null) {
+                fromNode.connectTo(node, randomInt(10,300));
+            }
+
+            if (getNodeCount() < nodes) {
+                int i = maxBranchesPerNode;
+
+                do {
+
+                    // erste Kante darf nicht zu einem alten knoten verbinden, da sonst kreis (deshalb i < maxBranchesPerNode)
+                    if (i < maxBranchesPerNode && probabiltyOccured(branchToExistingNodeOdds)) {
+                        Node randNode = this.getRandomNode();
+
+                        if (randNode != null) {
+                            node.connectTo(randNode, randomInt(100, 700));
+                        }
+                    }
+                    else {
+
+                        fromNode = node;
+                    }
+
+                    i--;
+                } while (probabiltyOccured(branchOdds) && i > 0);
+
+            } else break;
         }
 
-        if (node.getId() < nodes) {
-            int i = maxBranchesPerNode;
 
-            do {
-
-                // erste Kante darf nicht zu einem alten knoten verbinden, da sonst kreis (deshalb i < maxBranchesPerNode)
-                if (i < maxBranchesPerNode && probabiltyOccured(branchToExistingNodeOdds)) {
-                    Node randNode = Node.getNode(randomInt(0, node.getId() -1));
-
-                    if (randNode != null) {
-                        node.connectTo(randNode, randomInt(100, 700));
-                    }
-                }
-                else {
-                    if (node.getId() % 10000 == 9999) {
-                        continueWithNode = node;
-                        return;
-                    }
-
-                    createNode(node);
-                }
-
-                i--;
-            } while (probabiltyOccured(branchOdds) && i > 0);
-
-        }
 
 
     }
 
+    public Node getRandomNode() {
+        return nodeMap.values().stream().toList().get(randomInt(0, nodeMap.size() - 1));
+    }
+
+    public int getNodeCount() {
+        return nodeMap.size();
+    }
 
 }

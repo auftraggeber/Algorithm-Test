@@ -90,6 +90,9 @@ public class Dijkstra extends Algorithm {
 
     @Override
     public int getDistance() {
+        if (pathToFinalNode == null)
+            return 0;
+
         return pathToFinalNode.getLength();
     }
 

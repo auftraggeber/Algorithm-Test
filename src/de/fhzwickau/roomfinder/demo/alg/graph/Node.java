@@ -8,23 +8,6 @@ public class Node {
 
     private static int lastID = -1;
 
-    private static List<Node> nodes = new ArrayList<>();
-
-    public static Node getNode(int id) {
-        if (id < lastID && id < nodes.size()) {
-            Node node = nodes.get(id);
-
-            if (node.getId() == id)
-                return node;
-        }
-
-        return null;
-    }
-
-    public static void clear() {
-        lastID = -1;
-        nodes = new ArrayList<>();
-    }
 
     private int id;
     private Set<Edge> edges = new HashSet<>();
@@ -36,7 +19,6 @@ public class Node {
 
         //System.out.println("Node " + id + " created");
 
-        nodes.add(this);
     }
 
     public void connectTo(Node node, int length) {
@@ -56,4 +38,6 @@ public class Node {
     public int getId() {
         return id;
     }
+
+
 }

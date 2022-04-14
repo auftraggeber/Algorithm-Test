@@ -23,7 +23,7 @@ public abstract class Algorithm {
     public void start() {
         startTimestamp = System.currentTimeMillis();
 
-        System.out.println("Started " + getClass().getSimpleName() + " from #" + startNode.getId() + " to #" + endNode.getId());
+        //System.out.println("Started " + getClass().getSimpleName() + " from #" + startNode.getId() + " to #" + endNode.getId());
     }
 
     /**
@@ -34,6 +34,7 @@ public abstract class Algorithm {
 
         long diff = endTimestamp - startTimestamp;
 
+        /*
         System.out.println("");
         System.out.println(getClass().getSimpleName() + " needed " + diff + "ms.");
         System.out.println(getClass().getSimpleName() + " calculated distance: " +  getDistance());
@@ -49,6 +50,7 @@ public abstract class Algorithm {
 
         System.out.println("\n" + getClass().getSimpleName() + " calculated path: \n" + pathString);
         System.out.println("-----------------------------------------------------\n");
+        */
     }
 
     public long getStartTimestamp() {
