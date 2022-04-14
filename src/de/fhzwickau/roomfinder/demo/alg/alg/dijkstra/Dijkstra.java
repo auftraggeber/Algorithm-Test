@@ -5,27 +5,42 @@ import de.fhzwickau.roomfinder.demo.alg.alg.Path;
 import de.fhzwickau.roomfinder.demo.alg.graph.Edge;
 import de.fhzwickau.roomfinder.demo.alg.graph.Node;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Dijkstra extends Algorithm {
 
-    Map<Node, Path> paths;
+    private Queue<Path> paths;
+    private Path pathToFinalNode;
+    private Map<Node, Integer> nodeLenghts = new HashMap<>();
 
+    /**
+     * Der Konstruktor muss von jedem Kind ganauso übernommen werden, dass Test ablaufen kann.
+     *
+     * @param startNode Der Startknoten.
+     * @param endNode   Der Endknoten.
+     */
     public Dijkstra(Node startNode, Node endNode) {
         super(startNode, endNode);
+
         paths = dataType();
     }
 
-    public Map<Node, Path> dataType() {
-        return new TreeMap<Node, Path>((o1, o2) -> {
+    private Queue<Path> dataType() {
+        return new PriorityQueue<Path>((o1,o2)-> {
 
-            if (o1.getId() < o2.getId()) {
+            if (o1.getLength() < o2.getLength()) {
                 return -1;
-            } else if (o1.getId() > o2.getId()) {
+            } else if (o1.getLength() > o2.getLength()) {
                 return 1;
+            } else if (o1.getNodes().size() > o2.getNodes().size()) {
+                return 1;
+            } else if (o1.getNodes().size() < o2.getNodes().size()) {
+                return -1;
+            } else if (!o1.equals(o2)) {
+                return -1;
             }
 
             return 0;
@@ -36,46 +51,50 @@ public class Dijkstra extends Algorithm {
     public void start() {
         super.start();
 
-        paths.put(getStartNode(), new Path(null, getStartNode(), 0));
+        paths.add(new Path(null, getStartNode(), 0));
+        nodeLenghts.put(getStartNode(), 0);
 
-        calcPaths(getStartNode());
+        calcNextPaths();
     }
 
-    private int getCurrentPathLength(Node toNode) {
+    private void calcNextPaths() {
 
-        if (paths.containsKey(toNode))
-            return paths.get(toNode).getLength();
+        while (!paths.isEmpty()) {
+            Path current = paths.poll();
+            Node currentEnd = current.getLast();
 
-        return -1;
-    }
+            for (Edge conns : currentEnd.getEdges()) {
+                Path toNext = new Path(current, conns.getOther(currentEnd), conns.getLength());
 
-    private boolean pathIsShorterThanCurrent(Path path, Node toNode) {
-        return getCurrentPathLength(toNode) == -1 || path.getLength() < getCurrentPathLength(toNode);
-    }
+                if (nodeLenghts.get(toNext.getLast()) != null && nodeLenghts.get(toNext.getLast()) < toNext.getLength())
+                    continue;
 
-    private void calcPaths(Node node) {
-        for (Edge e : node.getEdges()) {
-            Node other = e.getOther(node);
+                if (pathToFinalNode == null || pathToFinalNode.getLength() > toNext.getLength()) {
 
-            Path path = new Path(paths.get(node), other, e.getLength());
+                    if (toNext.getLast().getId() == getEndNode().getId()) {
+                        pathToFinalNode = toNext;
+                    }
+                    else {
+                        nodeLenghts.put(toNext.getLast(), toNext.getLength());
+                        paths.add(toNext);
+                    }
+                }
 
-            if (pathIsShorterThanCurrent(path, other) && pathIsShorterThanCurrent(path, getEndNode())) {
-                paths.put(other, path);
-                calcPaths(other);
             }
         }
 
-        if (node.getId() == getStartNode().getId())
-            end();
+        end();
     }
+
+
 
     @Override
     public int getDistance() {
-        return getCurrentPathLength(getEndNode());
+        return pathToFinalNode.getLength();
     }
 
     @Override
     public Path getCalculatedPath() {
-        return paths.get(getEndNode());
+        return pathToFinalNode;
     }
 }

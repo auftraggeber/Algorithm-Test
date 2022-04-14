@@ -1,8 +1,9 @@
 package de.fhzwickau.roomfinder.demo.alg;
 
 import de.fhzwickau.roomfinder.demo.alg.alg.Algorithm;
+import de.fhzwickau.roomfinder.demo.alg.alg.bellford.BellFord;
+import de.fhzwickau.roomfinder.demo.alg.alg.bellford.HashMapBellFord;
 import de.fhzwickau.roomfinder.demo.alg.alg.dijkstra.Dijkstra;
-import de.fhzwickau.roomfinder.demo.alg.alg.dijkstra.HashMapDijkstra;
 import de.fhzwickau.roomfinder.demo.alg.graph.Graph;
 import de.fhzwickau.roomfinder.demo.alg.graph.Node;
 
@@ -18,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
 
-        Map<Class<? extends Algorithm>, Integer[]> classSpeed = testAlgorithms(100,7000, Dijkstra.class, HashMapDijkstra.class);
+        Map<Class<? extends Algorithm>, Integer[]> classSpeed = testAlgorithms(100,7000, BellFord.class, HashMapBellFord.class, Dijkstra.class);
 
 
         /*

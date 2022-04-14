@@ -1,5 +1,7 @@
 package de.fhzwickau.roomfinder.demo.alg.graph;
 
+import de.fhzwickau.roomfinder.demo.alg.alg.Path;
+
 import java.util.*;
 
 public class Node {
@@ -26,6 +28,8 @@ public class Node {
 
     private int id;
     private Set<Edge> edges = new HashSet<>();
+
+    private Path dijkstraPath;
 
     public Node() {
         id = ++lastID;
