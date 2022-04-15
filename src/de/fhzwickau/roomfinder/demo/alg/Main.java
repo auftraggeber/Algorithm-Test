@@ -3,6 +3,7 @@ package de.fhzwickau.roomfinder.demo.alg;
 import de.fhzwickau.roomfinder.demo.alg.alg.Algorithm;
 import de.fhzwickau.roomfinder.demo.alg.alg.bellford.BellFord;
 import de.fhzwickau.roomfinder.demo.alg.alg.bellford.HashMapBellFord;
+import de.fhzwickau.roomfinder.demo.alg.alg.dijkstra.AStar;
 import de.fhzwickau.roomfinder.demo.alg.alg.dijkstra.Dijkstra;
 import de.fhzwickau.roomfinder.demo.alg.graph.Graph;
 import de.fhzwickau.roomfinder.demo.alg.graph.Node;
@@ -19,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
 
-    private static final Class<? extends Algorithm>[] CLASSES = new Class[]{Dijkstra.class, HashMapBellFord.class, BellFord.class};
+    private static final Class<? extends Algorithm>[] CLASSES = new Class[]{Dijkstra.class, AStar.class/*, HashMapBellFord.class, BellFord.class*/};
     private static int CYCLES = 100, NODES = 7000, BRANCH_ODDS = 10, MAX_BRANCHES_PER_NODE = 3, BRANCH_TO_EXISTING_NODE_ODDS = 30;
 
 
@@ -108,15 +109,31 @@ public class Main {
         return ((t[t.length / 2 -1] + t[t.length / 2]) / 2);
     }
 
-    private static List<Graph> buildGraphs(final int amount, final int nodes, final int branchOdds, final int maxBranchesPerNode, final int branchToExistingNodeOdds) {
+    private static List<Graph> buildGraphs(final int amount, final int nodes, final int branchOdds, final int maxBranchesPerNode, final int branchToExistingNodeOdds) throws InterruptedException {
+        System.out.println();
+        System.out.println("BUILDING GRAPHS...");
         List<Graph> list = new ArrayList<>();
 
+        String print = "";
+
         for (int i = 0; i < amount; i++) {
+
+            for (int j = 0; j < print.length(); j++)
+                System.out.print("\b");
+
             Graph g = new Graph(nodes, branchOdds, maxBranchesPerNode, branchToExistingNodeOdds);
             g.build();
 
+            print = (i+1) + "/" + amount + " finished";
+
+            System.out.print(print);
+
             list.add(g);
+            
+            Thread.sleep(1);
         }
+
+        System.out.println("\n");
 
         return list;
     }

@@ -28,7 +28,7 @@ public class Dijkstra extends Algorithm {
         paths = dataType();
     }
 
-    private Queue<Path> dataType() {
+    protected Queue<Path> dataType() {
         return new PriorityQueue<Path>((o1,o2)-> {
 
             if (o1.getLength() < o2.getLength()) {
