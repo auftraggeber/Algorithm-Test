@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
 
-    private static final Class<? extends Algorithm>[] CLASSES = new Class[]{Dijkstra.class, AStar.class/*, HashMapBellFord.class, BellFord.class*/};
+    private static final Class<? extends Algorithm>[] CLASSES = new Class[]{Dijkstra.class, /*AStar.class,*/ HashMapBellFord.class, BellFord.class};
     private static int CYCLES = 100, NODES = 7000, BRANCH_ODDS = 10, MAX_BRANCHES_PER_NODE = 3, BRANCH_TO_EXISTING_NODE_ODDS = 30;
 
 
@@ -29,9 +29,9 @@ public class Main {
 
         CYCLES = getInput("Test-cycles", 5);
         NODES = getInput("Approx. nodes per graph", 300);
-        BRANCH_ODDS = getInput("Branch odds (odds for second branch)", 1);
-        MAX_BRANCHES_PER_NODE = getInput("Max. branches per node", 2);
-        BRANCH_TO_EXISTING_NODE_ODDS = getInput("Odds for branches to existing node", 2);
+        BRANCH_ODDS = getInput("Edge odds (odds for second edge)", 1);
+        MAX_BRANCHES_PER_NODE = getInput("Max. edges per node", 2);
+        BRANCH_TO_EXISTING_NODE_ODDS = getInput("Odds for edges to existing node", 2);
 
 
         List<Graph> graphs = buildGraphs(CYCLES,NODES,BRANCH_ODDS,MAX_BRANCHES_PER_NODE, BRANCH_TO_EXISTING_NODE_ODDS);
